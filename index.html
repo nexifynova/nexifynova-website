@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nexify Nova | UK-Based Business Solutions Consultancy</title>
+    <link rel="icon" href="https://i.ibb.co/6GdkxBh/Chat-GPT-Image-Sep-1-2026-10-26-24-AM.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+    <!-- ===== LOADING SKELETON ===== -->
+    <div id="loadingSkeleton">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">NEXIFY <span>NOVA</span></div>
+        <div class="loader-progress">
+            <div class="loader-progress-bar"></div>
+        </div>
+    </div>
+
+    <!-- ===== CUSTOM CURSOR ===== -->
+    <div class="custom-cursor" id="customCursor">
+        <div class="cursor-dot"></div>
+        <div class="cursor-ring"></div>
+    </div>
+
+    <!-- ===== SCROLL PROGRESS ===== -->
+    <div class="scroll-progress" id="scrollProgress">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- ===== LIGHTBOX ===== -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+        <img class="lightbox-content" id="lightboxImage" src="" alt="Project Image" />
+    </div>
+
+    <!-- ===== CLIENT PROFILE MODAL ===== -->
+    <div class="client-profile-modal" id="clientProfileModal" onclick="if(event.target===this) closeClientProfile()">
+        <div class="profile-card">
+            <button class="close-profile-btn" onclick="closeClientProfile()">&times;</button>
+            <div class="profile-avatar"><i class="fas fa-user-circle"></i></div>
+            <h3 id="clientProfileName">Muhammad Ali</h3>
+            <p class="profile-email" id="clientProfileEmail">ali@example.com</p>
+            <div id="clientProfileDetails">
+                <div class="profile-detail"><span class="label">Phone</span><span class="value" id="cpPhone">—</span></div>
+                <div class="profile-detail"><span class="label">City</span><span class="value" id="cpCity">—</span></div>
+                <div class="profile-detail"><span class="label">Business</span><span class="value" id="cpBusiness">—</span></div>
+                <div class="profile-detail"><span class="label">Business Type</span><span class="value" id="cpBizType">—</span></div>
+                <div class="profile-detail"><span class="label">Registered</span><span class="value" id="cpDate">—</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== BLOG ARTICLE PAGE ===== -->
+    <div id="blogArticlePage" class="page-modal">
+        <button class="modal-close-btn" onclick="closePageModal('blogArticlePage')">&times;</button>
+        <nav class="navbar" style="position:relative;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);">
+            <div class="container">
+                <a href="#" class="logo-wrapper" onclick="closePageModal('blogArticlePage'); scrollToTop();">
+                    <img src="https://i.ibb.co/6GdkxBh/Chat-GPT-Image-Sep-1-2026-10-26-24-AM.png" alt="Nexify Nova Logo" class="logo-img" />
+                    <div>
+                        <div class="brand-name">NEXIFY <span>NOVA</span></div>
+                        <div class="brand-tagline">Digital Business Solutions</div>
+                    </div>
+                </a>
+                <ul class="nav-links" style="display:flex; margin-left:auto;">
+                    <li id="nav-home"><a href="#" onclick="closePageModal('blogArticlePage'); scrollToTop();"><i class="fas fa-home"></i> Home</a></li>
+                    <li id="nav-contact"><a href="#" onclick="closePageModal('blogArticlePage'); openPageModal('contactPage');"><i class="fas fa-envelope"></i> Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="modal-page-hero">
+            <img id="blogArticleHeroImage" src="" alt="Article Hero" />
+            <div class="page-title-overlay"><h1 id="blogArticleTitle">Article Title</h1><p id="blogArticleDate"></p></div>
+        </div>
+        <div class="modal-page-content" style="max-width: 900px;">
+            <div class="content-text" style="font-size: 1.1rem; line-height: 1.9;">
+                 <p id="blogArticleContent" style="white-space: pre-wrap;"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="#" class="logo-wrapper" onclick="scrollToTop()">
+                <img src="https://i.ibb.co/6GdkxBh/Chat-GPT-Image-Sep-1-2026-10-26-24-AM.png" alt="Nexify Nova Logo" class="logo-img" />
+                <div>
+                    <div class="brand-name">NEXIFY <span>NOVA</span></div>
+                    <div class="brand-tagline">Digital Business Solutions</div>
+                </div>
+            </a>
+            <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-links" id="navLinks" style="margin-left: auto;">
+                
+                <div id="dynamicNavContainer" style="display:flex; align-items:center; gap:4px; flex-wrap:wrap; justify-content:flex-end;">
+                    <li id="nav-home"><a href="#" onclick="scrollToTop()"><i class="fas fa-home"></i> Home</a></li>
+                    <li id="nav-ceo"><a href="#" onclick="openPageModal('ceoPage')"><i class="fas fa-user-tie"></i> CEO</a></li>
+                    <li id="nav-vision"><a href="#" onclick="openPageModal('visionPage')"><i class="fas fa-eye"></i> Vision</a></li>
+                    <li id="nav-team"><a href="#" onclick="openPageModal('hierarchyPage')"><i class="fas fa-sitemap"></i> Team</a></li>
+                    <li id="nav-career"><a href="#" onclick="openPageModal('careerPage'); return false;"><i class="fas fa-briefcase"></i> Careers</a></li>
+                    <li id="nav-admin"><a href="#" onclick="promptAdmin()"><i class="fas fa-shield-alt"></i> Admin</a></li>
+                    <li id="nav-contact"><a href="#" onclick="openPageModal('contactPage'); return false;"><i class="fas fa-envelope"></i> Contact</a></li>
+                    <li id="nav-services"><a href="#services">Services</a></li>
+                    <li id="nav-showcase"><a href="#showcase">Solutions</a></li>
+                    <li id="nav-projects"><a href="#projects">Projects</a></li>
+                    <li id="nav-testimonials"><a href="#testimonials">Testimonials</a></li>
+                    <li id="nav-blog"><a href="#blog">Blog</a></li>
+                </div>
+
+                <li>
+                    <div class="user-dropdown" id="userDropdown">
+                        <button class="dropdown-trigger" id="userDropdownTrigger" onclick="toggleUserDropdown()">
+                            <i class="fas fa-user"></i>
+                            <span id="userDropdownLabel">Guest</span>
+                            <i class="fas fa-chevron-down chevron"></i>
+                        </button>
+                        <ul class="dropdown-menu" id="userDropdownMenu">
+                            <li><a href="#" onclick="openPageModal('loginPage'); closeUserDropdown(); return false;"><i class="fas fa-sign-in-alt"></i> Sign In</a></li>
+                            <li><a href="#" onclick="openPageModal('registerPage'); closeUserDropdown(); return false;"><i class="fas fa-user-plus"></i> Register New User</a></li>
+                            <li class="divider" id="dropdownDivider" style="display:none;"></li>
+                            <li><a href="#" onclick="openPageModal('profilePage'); closeUserDropdown(); return false;" id="profileDropdownItem" style="display:none;"><i class="fas fa-id-card"></i> Profile</a></li>
+                            <li><a href="#" onclick="logoutUser(); closeUserDropdown(); return false;" id="logoutDropdownItem" style="display:none;"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li>
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                        <i class="fas fa-moon" id="themeIcon"></i>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero" id="home">
+        <canvas id="particleCanvas"></canvas>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge"><i class="fas fa-star" style="margin-right:6px;"></i> Trusted by 50+ businesses</div>
+                <h1 class="heading heading-lg" id="typingHeading">
+                    Intelligent Digital Systems<br />for a <span>Global Economy</span>
+                    <span class="typing-cursor" id="typingCursor"></span>
+                </h1>
+                <p class="subtitle">From luxury retail to complex B2B supply chains, we engineer world-class platforms that drive real, measurable growth.</p>
+                <div class="btn-group">
+                    <a href="#projects" class="btn btn-primary"><i class="fas fa-rocket"></i> View Our Work</a>
+                    <a href="#" onclick="openPageModal('contactPage'); return false;" class="btn btn-outline"><i class="fas fa-envelope"></i> Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== TRUST BAR ===== -->
+    <section class="trust-bar" id="trustBar">
+        <div class="container">
+            <div class="trust-stat">
+                <h3><span class="counter-number" data-target="50">0</span><span>+</span></h3>
+                <p>Businesses Transformed</p>
+            </div>
+            <div class="trust-stat">
+                <h3><span class="counter-number" data-target="100">0</span><span>%</span></h3>
+                <p>Client Satisfaction</p>
+            </div>
+            <div class="trust-stat">
+                <h3><span class="counter-number" data-target="24">0</span><span>/7</span></h3>
+                <p>Support Available</p>
+            </div>
+            <div class="trust-stat">
+                <h3><span class="counter-number" data-target="49">0</span><span>.9★</span></h3>
+                <p>Average Rating</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SERVICES ===== -->
+    <section class="services" id="services">
+        <div class="container">
+            <h2 class="section-title">What We <span>Offer</span></h2>
+            <p class="section-desc">Complete digital solutions to streamline your business operations.</p>
+            <div class="section-divider"></div>
+            <div class="services-grid">
+                <div class="service-card fade-in"><span class="icon"><i class="fas fa-store"></i></span><h3>Business Digitalization</h3><p>Transform your traditional business into a fully digital, paperless operation.</p></div>
+                <div class="service-card fade-in"><span class="icon"><i class="fas fa-chart-line"></i></span><h3>Business Management</h3><p>End-to-end management of sales, purchases, accounts, and cash flow.</p></div>
+                <div class="service-card fade-in"><span class="icon"><i class="fas fa-boxes"></i></span><h3>Inventory Management</h3><p>Real-time tracking of stock, suppliers, and inventory with smart alerts.</p></div>
+                <div class="service-card fade-in"><span class="icon"><i class="fas fa-credit-card"></i></span><h3>Cash Flow Management</h3><p>Monitor income, expenses, and profit with full transparency.</p></div>
+                <div class="service-card fade-in"><span class="icon"><i class="fas fa-mobile-alt"></i></span><h3>Custom Web & Mobile Apps</h3><p>Tailor-made apps that fit your business needs perfectly.</p></div>
+                <div class="service-card fade-in"><span class="icon"><i class="fas fa-headset"></i></span><h3>24/7 Support & Training</h3><p>We don't just build — we train and support your team.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SHOWCASE ===== -->
+    <section class="showcase" id="showcase">
+        <div class="container">
+            <h2 class="section-title">Our <span>Solutions</span> in Action</h2>
+            <p class="section-desc">Real systems that we build for businesses like yours.</p>
+            <div class="section-divider"></div>
+            <div class="showcase-grid">
+                <div class="showcase-card fade-in"><div class="icon-box"><i class="fas fa-shopping-cart"></i><h4>E-Commerce Store</h4></div><div class="info"><p>Fully functional online store with inventory and order tracking.</p></div></div>
+                <div class="showcase-card fade-in"><div class="icon-box"><i class="fas fa-tachometer-alt"></i><h4>Management Dashboard</h4></div><div class="info"><p>Central dashboard to manage sales, purchases, and accounts.</p></div></div>
+                <div class="showcase-card fade-in"><div class="icon-box"><i class="fas fa-warehouse"></i><h4>Inventory System</h4></div><div class="info"><p>Smart inventory with low-stock alerts and supplier management.</p></div></div>
+                <div class="showcase-card fade-in"><div class="icon-box"><i class="fas fa-wallet"></i><h4>Cash Flow Tracker</h4></div><div class="info"><p>Track every rupee — income, expenses, and profit in real-time.</p></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== PROJECTS ===== -->
+    <section class="projects-section" id="projects">
+        <div class="container">
+            <h2 class="section-title">🌟 Our <span>Projects</span></h2>
+            <p class="section-desc">Explore the digital solutions we've built for real businesses.</p>
+            <div class="section-divider"></div>
+            <div class="filter-bar">
+                <button class="btn-filter active" data-filter="all">All</button>
+                <button class="btn-filter" data-filter="erp">ERP</button>
+                <button class="btn-filter" data-filter="retail">Retail</button>
+                <button class="btn-filter" data-filter="healthcare">Healthcare</button>
+                <button class="btn-filter" data-filter="ecommerce">E-Commerce</button>
+            </div>
+            <div class="projects-grid" id="projectsGrid"></div>
+        </div>
+    </section>
+
+    <!-- ===== TESTIMONIALS ===== -->
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Our <span>Clients</span> Say</h2>
+            <p class="section-desc">Real feedback from real businesses we've helped transform.</p>
+            <div class="section-divider"></div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card fade-in">
+                    <div class="avatar"><i class="fas fa-user"></i></div>
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <blockquote>Nexify Nova completely transformed our business operations. The ERP system they built is intuitive, powerful, and has saved us countless hours.</blockquote>
+                    <div class="author">Muhammad Ali</div>
+                    <div class="role">CEO, TechCorp Ltd.</div>
+                </div>
+                <div class="testimonial-card fade-in">
+                    <div class="avatar"><i class="fas fa-user"></i></div>
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <blockquote>The team at Nexify Nova understood our vision perfectly. Our new e-commerce platform is sleek, fast, and has already boosted our sales by 40%.</blockquote>
+                    <div class="author">Sarah Smith</div>
+                    <div class="role">Founder, RetailGiant</div>
+                </div>
+                <div class="testimonial-card fade-in">
+                    <div class="avatar"><i class="fas fa-user"></i></div>
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <blockquote>From concept to launch, Nexify Nova was with us every step of the way. Their support is unmatched and the quality of work is outstanding.</blockquote>
+                    <div class="author">Mike Johnson</div>
+                    <div class="role">CTO, HealthPlus</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== BLOG ===== -->
+    <section class="blog-section" id="blog">
+        <div class="container">
+            <h2 class="section-title">Latest <span>Insights</span></h2>
+            <p class="section-desc">Stay updated with our latest news, tips, and industry insights.</p>
+            <div class="section-divider"></div>
+            <div class="blog-grid" id="blogGrid"></div>
+        </div>
+    </section>
+
+    <!-- ===== CONTACT SECTION ===== -->
+    <section class="contact-section" id="contact">
+        <div class="container">
+            <h2 class="section-title">Get in <span>Touch</span></h2>
+            <p class="section-desc">We'd love to hear about your project. Fill out the form below.</p>
+            <div class="section-divider"></div>
+            <div class="contact-wrapper">
+                <div class="contact-form">
+                    <h3>Send us a Message</h3>
+                    <div class="success-msg" id="successMsg">
+                        <i class="fas fa-check-circle"></i> Thank you! Your message has been sent successfully.
+                    </div>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="contactName">Full Name *</label>
+                            <input type="text" id="contactName" required placeholder="Muhammad Ali" />
+                        </div>
+                        <div class="form-group">
+                            <label for="contactEmail">Email Address *</label>
+                            <input type="email" id="contactEmail" required placeholder="ali@example.com" />
+                        </div>
+                        <div class="form-group">
+                            <label for="contactPhone">Phone Number</label>
+                            <input type="tel" id="contactPhone" placeholder="+44 7123 456789" />
+                        </div>
+                        <div class="form-group">
+                            <label for="contactMessage">Message *</label>
+                            <textarea id="contactMessage" rows="5" required placeholder="Tell us about your project..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Send Message</button>
+                    </form>
+                </div>
+                <div class="contact-info-box">
+                    <h3>Contact Information</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> <span id="contact-address">Berkeley square House, London W1J 6JD</span></p>
+                    <p><i class="fas fa-phone"></i> <span id="contact-phone1">+44 7564 920084</span> (UK & Intl)</p>
+                    <p><i class="fas fa-phone"></i> <span id="contact-phone2">+92 349 3709850</span> (Pakistan)</p>
+                    <p><i class="fas fa-envelope"></i> <a href="mailto:info@nexifynova.co.uk" id="contact-email1">info@nexifynova.co.uk</a></p>
+                    <p><i class="fas fa-envelope"></i> <a href="mailto:nexifynova.solutions@gmail.com" id="contact-email2">nexifynova.solutions@gmail.com</a></p>
+                    <p><i class="fas fa-globe"></i> <a href="#" id="contact-website">www.nexifynova.uk.co</a></p>
+                    <div class="offer-list">
+                        <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:8px;">What we offer:</h3>
+                        <p>✓ Custom E-Commerce Stores</p>
+                        <p>✓ B2B Inventory & ERP Systems</p>
+                        <p>✓ Corporate Websites & Booking Systems</p>
+                        <p>✓ Real-Time Data Management</p>
+                        <p>✓ 24/7 Technical Support</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CTA ===== -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to <span>Digitalize</span> Your Business?</h2>
+            <p class="cta-desc">Let's build a system that grows with you.</p>
+            <div class="contact-info">
+                <div><a href="https://wa.me/923493709850" target="_blank"><i class="fab fa-whatsapp"></i> <span id="cta-phone1">+92 349 3709850</span></a></div>
+                <div><i class="fas fa-phone"></i> <span id="cta-phone2">+44 7564 920084</span></div>
+                <div><a href="mailto:info@nexifynova.co.uk"><i class="fas fa-envelope"></i> <span id="cta-email1">info@nexifynova.co.uk</span></a></div>
+                <div><i class="fas fa-map-marker-alt"></i> <span id="cta-address">London, UK</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-brand">NEXIFY <span>NOVA</span></div>
+            <div class="social-links">
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            </div>
+            <p>&copy; 2026 Nexify Nova. All rights reserved.</p>
+            <p class="footer-tagline"><i class="fas fa-globe"></i> Digitalizing businesses, one at a time.</p>
+        </div>
+    </footer>
+
+    <!-- ============================================================
+    FULL PAGE MODALS
+    ============================================================ -->
+
+    <!-- ===== CEO PAGE ===== -->
+    <div id="ceoPage" class="page-modal">
+        <button class="modal-close-btn" onclick="closePageModal('ceoPage')">&times;</button>
+        <nav class="navbar" style="position:relative;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);">
+            <div class="container">
+                <a href="#" class="logo-wrapper" onclick="closePageModal('ceoPage'); scrollToTop();">
+                    <img src="https://i.ibb.co/6GdkxBh/Chat-GPT-Image-Sep-1-2026-10-26-24-AM.png" alt="Nexify Nova Logo" class="logo-img" />
+                    <div>
+                        <div class="brand-name">NEXIFY <span>NOVA</span></div>
+                        <div class="brand-tagline">Digital Business Solutions</div>
+                    </div>
+                </a>
+                <ul class="nav-links" style="display:flex; margin-left:auto;">
+                    <li id="nav-home"><a href="#" onclick="closePageModal('ceoPage'); scrollToTop();"><i class="fas fa-home"></i> Home</a></li>
+                    <li id="nav-ceo"><a href="#" onclick="closePageModal('ceoPage'); openPageModal('ceoPage');"><i class="fas fa-user-tie"></i> CEO</a></li>
+                    <li id="nav-vision"><a href="#" onclick="closePageModal('ceoPage'); openPageModal('visionPage');"><i class="fas fa-eye"></i> Vision</a></li>
+                    <li id="nav-team"><a href="#" onclick="closePageModal('ceoPage'); openPageModal('hierarchyPage');"><i class="fas fa-sitemap"></i> Team</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="modal-page-hero">
+            <img src="https://images.pexels.com/photos/3183183/pexels-photo-3183183.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="CEO Message" />
+            <div class="page-title-overlay"><h1>CEO <span>Message</span></h1><p>Our promise to you</p></div>
+        </div>
+        <div class="modal-page-content">
+            <div class="content-text">
+                <p>At Nexify Nova, we believe that every business has a unique story to tell. Our mission is to transform that story into a digital reality. We don't just build websites; we build long-term partnerships, ensuring that your online presence is as powerful as your vision.</p>
+                <div class="highlight-quote"><p style="margin-bottom:0;"><strong style="color:var(--accent-gold);font-size:1.1rem;">"Your success is our success."</strong></p></div>
+                <p>We are not just a service provider; we are your dedicated digital growth partner. We are with you at every step of this journey, from the first conversation to the final launch and beyond.</p>
+                <div style="margin-top:24px;padding:20px 24px;background:var(--bg-card);border-radius:var(--radius-md);border-left:3px solid var(--accent-gold);">
+                    <strong style="color:var(--accent-gold);">— Zuma Lasiaf</strong><br />
+                    <span style="color:var(--text-muted);font-size:0.9rem;">Founder &amp; CEO, Nexify Nova</span>
+                </div>
+            </div>
+        </div>
+        <footer class="footer" style="border-top:1px solid var(--border-subtle);">
+            <div class="container">
+                <div class="footer-brand">NEXIFY <span>NOVA</span></div>
+                <div class="social-links"><a href="#"><i class="fab fa-facebook-f"></i></a><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-youtube"></i></a></div>
+                <p>&copy; 2026 Nexify Nova. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ===== VISION PAGE ===== -->
+    <div id="visionPage" class="page-modal">
+        <button class="modal-close-btn" onclick="closePageModal('visionPage')">&times;</button>
+        <nav class="navbar" style="position:relative;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);">
+            <div class="container">
+                <a href="#" class="logo-wrapper" onclick="closePageModal('visionPage'); scrollToTop();">
+                    <img src="https://i.ibb.co/6GdkxBh/Chat-GPT-Image-Sep-1-2026-10-26-24-AM.png" alt="Nexify Nova Logo" class="logo-img" />
+                    <div>
+                        <div class="brand-name">NEXIFY <span>NOVA</span></div>
+                        <div class="brand-tagline">Digital Business Solutions</div>
+                    </div>
+                </a>
+                <ul class="nav-links" style="display:flex; margin-left:auto;">
+                    <li id="nav-home"><a href="#" onclick="closePageModal('visionPage'); scrollToTop();"><i class="fas fa-home"></i> Home</a></li>
+                    <li id="nav-ceo"><a href="#" onclick="closePageModal('visionPage'); openPageModal('ceoPage');"><i class="fas fa-user-tie"></i> CEO</a></li>
+                    <li id="nav-vision"><a href="#" onclick="closePageModal('visionPage'); openPageModal('visionPage');"><i class="fas fa-eye"></i> Vision</a></li>
+                    <li id="nav-team"><a href="#" onclick="closePageModal('visionPage'); openPageModal('hierarchyPage');"><i class="fas fa-sitemap"></i> Team</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="modal-page-hero">
+            <img src="https://images.pexels.com/photos/3182773/pexels-photo-3182773.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Vision" />
+            <div class="page-title-overlay"><h1>Our <span>Vision</span></h1><p>Shaping the future of digital business</p></div>
+        </div>
+        <div class="modal-page-content">
+            <div class="content-text">
+                <div class="highlight-quote"><p style="margin-bottom:0;font-size:1.3rem;font-weight:600;color:var(--text-primary);">"To equip every business with digital power, enabling them to compete on a global level."</p></div>
+                <p>We envision a future where every small and large business can leverage modern technology to fully realize its potential.</p>
+                <p>We believe that technology should be accessible, beautiful, and powerful — and that's exactly what we deliver to every client who trusts us with their digital journey.</p>
+                <div style="margin-top:28px;display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                    <div style="background:var(--bg-card);padding:24px;border-radius:var(--radius-sm);border:1px solid var(--border-subtle);text-align:center;"><div style="font-size:2.4rem;color:var(--accent-gold);margin-bottom:4px;">🌍</div><h4 style="font-weight:700;font-size:1rem;">Global Reach</h4><p style="font-size:0.85rem;color:var(--text-muted);">Empowering businesses worldwide.</p></div>
+                    <div style="background:var(--bg-card);padding:24px;border-radius:var(--radius-sm);border:1px solid var(--border-subtle);text-align:center;"><div style="font-size:2.4rem;color:var(--accent-gold);margin-bottom:4px;">⚡</div><h4 style="font-weight:700;font-size:1rem;">Innovation First</h4><p style="font-size:0.85rem;color:var(--text-muted);">Always pushing the boundaries.</p></div>
+                </div>
+            </div>
+        </div>
+        <footer class="footer" style="border-top:1px solid var(--border-subtle);">
+            <div class="container">
+                <div class="footer-brand">NEXIFY <span>NOVA</span></div>
+                <div class="social-links"><a href="#"><i class="fab fa-facebook-f"></i></a><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-youtube"></i></a></div>
+                <p>&copy; 2026 Nexify Nova. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ===== HIERARCHY (TEAM) PAGE ===== -->
+    <div id="hierarchyPage" class="page-modal">
+        <button class="modal-close-btn" onclick="closePageModal('hierarchyPage')">&times;</button>
+        <nav class="navbar" style="position:relative;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);">
+            <div class="container">
+                <a href="#" class="logo-wrapper" onclick="closePageModal('hierarchyPage'); scrollToTop();">
+                    <img src="https://i.ibb.co/6GdkxBh/Chat-GPT-Image-Sep-1-2026-10-26-24-AM.png" alt="Nexify Nova Logo" class="logo-img" />
+                    <div>
+                        <div class="brand-name">NEXIFY <span>NOVA</span></div>
+                        <div class="brand-tagline">Digital Business Solutions</div>
+                    </div>
+                </a>
+                <ul class="nav-links" style="display:flex; margin-left:auto;">
+                    <li id="nav-home"><a href="#" onclick="closePageModal('hierarchyPage'); scrollToTop();"><i class="fas fa-home"></i> Home</a></li>
+                    <li id="nav-ceo"><a href="#" onclick="closePageModal('hierarchyPage'); openPageModal('ceoPage');"><i class="fas fa-user-tie"></i> CEO</a></li>
+                    <li id="nav-vision"><a href="#" onclick="closePageModal('hierarchyPage'); openPageModal('visionPage');"><i class="fas fa-eye"></i> Vision</a></li>
+                    <li id="nav-team"><a href="#" onclick="closePageModal('hierarchyPage'); openPageModal('hierarchyPage');"><i class="fas fa-sitemap"></i> Team</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="modal-page-hero">
+            <img src="https://images.pexels.com/photos/3182763/pexels-photo-3182763.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Our Team" />
+            <div class="page-title-overlay"><h1>Meet the <span>Team</span></h1><p>The people behind Nexify Nova</p></div>
+        </div>
+        <div class="modal-page-content">
+            <div class="content-text">
+                <p>Dedicated professionals committed to your success. We bring together diverse expertise to deliver world-class digital solutions.</p>
+                <div class="hierarchy-grid">
+                    <div class="hierarchy-card"><h4>Miss Zuma Lasiaf</h4><div class="role">Founder &amp; CEO</div><p>Leading the vision and strategy of Nexify Nova.</p></div>
+                    <div class="hierarchy-card"><h4>Mr. Faisal Ilyas</h4><div class="role">Country Head — Marketing &amp; Sales</div><p>UK — Driving marketing and sales across the region.</p></div>
+                    <div class="hierarchy-card"><h4>Mr. Asad Ilyas</h4><div class="role">Joint Marketing &amp; Sales Manager</div><p>UK &amp; Pak — Supporting marketing and sales operations.</p></div>
+                    <div class="hierarchy-card"><h4>Mr. Qasam Aziz</h4><div class="role">Country Head — Marketing &amp; Sales</div><p>UK — Expanding our reach and building partnerships.</p></div>
+                    <div class="hierarchy-card"><h4>Mr. Shahryar Masood</h4><div class="role">Business Development Lead — Islamabad</div><p>Promoting growth and ensuring strong sales.</p></div>
+                    <div class="hierarchy-card"><h4>Mr. Danish Ahmed Siddiqui</h4><div class="role">Business Development Lead — Karachi</div><p>Promoting growth and ensuring strong sales.</p></div>
+                    <div class="hierarchy-card"><h4>Mr. Syed Muhammad Imran</h4><div class="role">Sales &amp; Operations Manager — Karachi</div><p>Managing local sales and operational excellence.</p></div>
+                </div>
+            </div>
+        </div>
+        <footer class="footer" style="border-top:1px solid var(--border-subtle);">
+            <div class="container">
+                <div class="footer-brand">NEXIFY <span>NOVA</span></div>
+                <div class="social-links"><a href="#"><i class="fab fa-facebook-f"></i></a><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-youtube"></i></a></div>
+                <p>&copy; 2026 Nexify Nova. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ===== CAREER PAGE ===== -->
+    <div id="careerPage" class="page-modal">
+        <button class="modal-close-btn" onclick="closePageModal('careerPage')">&times;</button>
+        <nav class="navbar" style="position:relative;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);">
+            <div class="container">
+                <a href="#" class="logo-wrapper" onclick="closePageModal('careerPage'); scrollToTop();">
+                    <img src="https://i.ibb.co/6GdkxBh/Chat-GPT-Image-Sep-1-2026-10-26-24-AM.png" alt="Nexify Nova Logo" class="logo-img" />
+                    <div>
+                        <div class="brand-name">NEXIFY <span>NOVA</span></div>
+                        <div class="brand-tagline">Digital Business Solutions</div>
+                    </div>
+                </a>
+                <ul class="nav-links" style="display:flex; margin-left:auto;">
+                    <li id="nav-home"><a href="#" onclick="closePageModal('careerPage'); scrollToTop();"><i class="fas fa-home"></i> Home</a></li>
+                    <li id="nav-career"><a href="#" onclick="closePageModal('careerPage'); openPageModal('careerPage');"><i class="fas fa-briefcase"></i> Careers</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="modal-page-hero">
+            <img src="https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Careers at Nexify Nova" />
+            <div class="page-title-overlay"><h1>Join Our <span>Team</span></h1><p>Build the future of digital business with us</p></div>
+        </div>
+        <div class="modal-page-content" style="max-width: 800px;">
+            <div class="content-text">
+                <p style="margin-bottom: 30px; text-align: center;">We are always looking for talented individuals to join our growing team. Fill out the form below and we will get back to you.</p>
+                
+                <div class="contact-form" style="padding: 30px;">
+                    <h3 style="margin-bottom: 20px;">Apply Now</h3>
+                    <div class="success-msg" id="careerSuccessMsg"><i class="fas fa-check-circle"></i> Your application has been submitted successfully!</div>
+                    
+                    <form id="careerForm">
+                        <div class="form-group"><label for="careerName">Full Name *</label><input type="text" id="careerName" required placeholder="Muhammad Ali" /></div>
+                        <div class="form-group"><label for="careerEmail">Email Address *</label><input type="email" id="careerEmail" required placeholder="ali@example.com" /></div>
+                        <div class="form-group"><label for="careerPhone">Phone Number</label><input type="tel" id="careerPhone" placeholder="+44 7123 456789" /></div>
+                        <div class="form-group">
+                            <label for="careerPosition">Position Applying For *</label>
+                            <select id="careerPosition" required style="width: 100%; padding: 12px 16px; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); color: var(--text-primary); font-family: 'Inter', sans-serif;">
+                                <option value="">Select a position...</option>
+                                <option value="Software Developer">Software Developer</option>
+                                <option value="UI/UX Designer">UI/UX Designer</option>
+                                <option value="Sales Manager">Sales Manager</option>
+                                <option value="Digital Marketer">Digital Marketer</option>
+                                <option value="Intern">Intern</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Upload CV (PDF or Word) *</label>
+                            <div class="file-input-wrapper">
+                                <span class="file-label" id="cvFileName"><i class="fas fa-upload"></i> Choose File</span>
+                                <input type="file" id="careerCV" required accept=".pdf,.doc,.docx" onchange="document.getElementById('cvFileName').innerHTML = '<i class=\'fas fa-file\'></i> ' + event.target.files[0].name" />
+                            </div>
+                        </div>
+                        
+                        <button type="submit" id="careerSubmitBtn" class="btn btn-primary" style="width:100%;justify-content:center;">Submit Application</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <footer class="footer" style="border-top:1px solid var(--border-subtle);">
+            <div class="container">
+                <div class="footer-brand">NEXIFY <span>NOVA</span></div>
+                <p>&copy; 2026 Nexify Nova. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ===== ADMIN PAGE ===== -->
+    <div id="adminPage" class="page-modal">
+        <button class="modal-close-btn" onclick="closePageModal('adminPage'); logoutAdmin();">&times;</button>
+        <nav class="navbar" style="position:relative;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);">
+            <div class="container">
+                <a href="#" class="logo-wrapper" onclick="closePageModal('adminPage'); logoutAdmin(); scrollToTop();">
+                    <img src="https://i.ibb.co/6GdkxBh/Chat-GPT-Image-Sep-1-2026-10-26-24-AM.png" alt="Nexify Nova Logo" class="logo-img" />
+                    <div>
+                        <div class="brand-name">NEXIFY <span>NOVA</span></div>
+                        <div class="brand-tagline">Digital Business Solutions</div>
+                    </div>
+                </a>
+                <ul class="nav-links" style="display:flex; margin-left:auto;">
+                    <li id="nav-home"><a href="#" onclick="closePageModal('adminPage'); logoutAdmin(); scrollToTop();"><i class="fas fa-home"></i> Home</a></li>
+                    <li id="nav-admin"><a href="#" onclick="closePageModal('adminPage'); logoutAdmin();"><i class="fas fa-shield-alt"></i> Admin</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="modal-page-hero">
+            <img src="https://images.pexels.com/photos/3182812/pexels-photo-3182812.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Admin Dashboard" />
+            <div class="page-title-overlay"><h1>Admin <span>Dashboard</span></h1><p>Manage your website content</p></div>
+        </div>
+        <div class="modal-page-content" style="max-width: 1000px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:12px;">
+                <h2><i class="fas fa-shield-alt" style="color:var(--accent-gold);"></i> Dashboard</h2>
+                <button class="logout-btn" onclick="closePageModal('adminPage'); logoutAdmin();">Logout</button>
+            </div>
+            <div class="dashboard-stats" id="dashboardStats">
+                <div class="stat-card"><div class="stat-icon"><i class="fas fa-folder-open"></i></div><span class="stat-number" id="statProjects"><span>0</span></span><div class="stat-label">Total Projects</div></div>
+                <div class="stat-card"><div class="stat-icon"><i class="fas fa-newspaper"></i></div><span class="stat-number" id="statBlogs"><span>0</span></span><div class="stat-label">Blog Posts</div></div>
+                <div class="stat-card"><div class="stat-icon"><i class="fas fa-envelope"></i></div><span class="stat-number" id="statMessages"><span>0</span></span><div class="stat-label">Messages</div></div>
+                <div class="stat-card"><div class="stat-icon"><i class="fas fa-users"></i></div><span class="stat-number" id="statClients"><span>0</span></span><div class="stat-label">Clients</div></div>
+            </div>
+            <div class="admin-tabs">
+                <button class="active" onclick="switchTab('blog')">📝 Blog Posts</button>
+                <button onclick="switchTab('projects')">📦 Projects</button>
+                <button onclick="switchTab('messages')">✉️ Messages</button>
+                <button onclick="switchTab('clients')">👤 Clients</button>
+                <button onclick="switchTab('applications')">💼 Applications</button>
+                <button onclick="switchTab('settings')">⚙️ Site Settings</button>
+            </div>
+
+            <!-- BLOG TAB -->
+            <div id="blogTab" style="display:block;">
+                <div class="admin-project-form">
+                    <h3>✍️ Add New Blog Post</h3>
+                    <div class="form-group"><label for="blogTitle">Post Title *</label><input type="text" id="blogTitle" placeholder="e.g. How Digital Transformation is Reshaping UK Businesses" /></div>
+                    <div class="form-group"><label for="blogContent">Content / Description *</label><textarea id="blogContent" rows="4" placeholder="Write your blog post content here..."></textarea></div>
+                    <div class="form-group"><label for="blogCategory">Category</label><input type="text" id="blogCategory" placeholder="e.g. Digitalization, ERP, E-Commerce" /></div>
+                    <div class="form-group"><label for="blogImage">Image URL (Optional)</label><input type="text" id="blogImage" placeholder="https://images.pexels.com/..." /></div>
+
+                    <div class="form-group"><label for="blogImageFile">Upload Image (Device)</label>
+                        <div class="file-input-wrapper">
+                            <span class="file-label"><i class="fas fa-upload"></i> Choose Image</span>
+                            <input type="file" id="blogImageFile" accept="image/*" onchange="previewBlogImage(event)" />
+                        </div>
+                        <div style="margin-top:10px;"><img id="blogImagePreview" src="" alt="Preview" style="display:none;max-width:120px;border-radius:var(--radius-sm);border:1px solid var(--border-subtle);background:var(--bg-secondary);object-fit:contain;" /></div>
+                        <input type="hidden" id="blogImageUrl" value="" />
+                    </div>
+
+                    <input type="hidden" id="blogEditId" value="" />
+                    <button class="btn btn-primary" onclick="saveBlogPost()" style="width:100%;justify-content:center;"><i class="fas fa-save"></i> Publish Post</button>
+                    <button class="btn btn-outline" onclick="resetBlogForm()" style="width:100%; margin-top:10px; justify-content:center;"><i class="fas fa-undo"></i> Reset Form</button>
+                </div>
+                <div id="adminBlogList"></div>
+            </div>
+
+            <!-- PROJECTS TAB -->
+            <div id="projectsTab" style="display:none;">
+                <div class="admin-project-form">
+                    <h3>➕ Add New Project</h3>
+                    <div class="form-group"><label for="projName">Project Name</label><input type="text" id="projName" placeholder="e.g. ABC Store" /></div>
+                    <div class="form-group"><label for="projDesc">Project Description</label><textarea id="projDesc" rows="3" placeholder="Short description"></textarea></div>
+                    <div class="form-group"><label for="projUrl">Project Live Link</label><input type="text" id="projUrl" placeholder="https://abcstore.vercel.app" /></div>
+                    <div class="form-group"><label for="projCategory">Category</label><input type="text" id="projCategory" placeholder="erp, retail, healthcare, ecommerce" /></div>
+                    <div class="form-group"><label for="projImageFile">Project Image</label>
+                        <div class="file-input-wrapper">
+                            <span class="file-label"><i class="fas fa-upload"></i> Choose Image</span>
+                            <input type="file" id="projImageFile" accept="image/*" onchange="previewProjectImage(event)" />
+                        </div>
+                        <div style="margin-top:10px;"><img id="projImagePreview" src="" alt="Preview" style="display:none;max-width:120px;border-radius:var(--radius-sm);border:1px solid var(--border-subtle);background:var(--bg-secondary);object-fit:contain;" /></div>
+                        <input type="hidden" id="projImageUrl" value="" />
+                    </div>
+                    <input type="hidden" id="projEditId" value="" />
+                    <button class="btn btn-primary" onclick="saveProject()" style="width:100%;justify-content:center;"><i class="fas fa-save"></i> Save Project</button>
+                    <button class="btn btn-outline" onclick="resetProjectForm()" style="width:100%; margin-top:10px; justify-content:center;"><i class="fas fa-undo"></i> Reset Form</button>
+                </div>
+                <div id="adminProjectsList"></div>
+            </div>
+
+            <!-- MESSAGES TAB -->
+            <div id="messagesTab" style="display:none;">
+                <div class="date-filter">
+                    <label>From: <input type="date" id="msgFrom" /></label>
+                    <label>To: <input type="date" id="msgTo" /></label>
+                    <button onclick="filterMessages()">Filter</button>
+                    <button onclick="resetMessageFilter()">Reset</button>
+                </div>
+                <div id="inquiryList"></div>
+            </div>
+
+            <!-- CLIENTS TAB -->
+            <div id="clientsTab" style="display:none;">
+                <div id="clientsList"></div>
+            </div>
+
+            <!-- APPLICATIONS TAB -->
+            <div id="applicationsTab" style="display:none;">
+                <div id="applicationsList"></div>
+            </div>
+
+            <!-- SETTINGS TAB (UPDATED) -->
+            <div id="settingsTab" style="display:none;">
+                <div class="admin-project-form" style="border:none;">
+                    <h3>👁️ Manage Navbar Buttons</h3>
+                    <p style="font-size:0.85rem; margin-bottom:15px; color:var(--text-muted);">Tick to hide, and Drag the boxes to reorder the menu.</p>
+                    <div id="navControlList" style="display:flex; flex-direction:column; gap:8px; margin-bottom:20px;"></div>
+                    
+                    <h3>🙈 Hide Sections</h3>
+                    <div style="display:flex; gap:20px; margin-bottom:20px;">
+                        <label style="display:flex; gap:8px; align-items:center;"><input type="checkbox" id="toggleTestimonials" /> Hide Testimonials</label>
+                        <label style="display:flex; gap:8px; align-items:center;"><input type="checkbox" id="toggleShowcase" /> Hide Solutions</label>
+                    </div>
+
+                    <h3>📞 Contact Information Settings</h3>
+                    <p style="font-size:0.85rem; margin-bottom:15px; color:var(--text-muted);">Change these details and they will update across the website.</p>
+                    <div class="form-group"><label>Address</label><input type="text" id="set-address" placeholder="Berkeley square House, London W1J 6JD" /></div>
+                    <div class="form-group"><label>Phone (UK & Intl)</label><input type="text" id="set-phone1" placeholder="+44 7564 920084" /></div>
+                    <div class="form-group"><label>Phone (Pakistan)</label><input type="text" id="set-phone2" placeholder="+92 349 3709850" /></div>
+                    <div class="form-group"><label>Email 1</label><input type="text" id="set-email1" placeholder="info@nexifynova.co.uk" /></div>
+                    <div class="form-group"><label>Email 2</label><input type="text" id="set-email2" placeholder="nexifynova.solutions@gmail.com" /></div>
+                    <div class="form-group"><label>Website</label><input type="text" id="set-website" placeholder="www.nexifynova.uk.co" /></div>
+                    
+                    <button class="btn btn-primary" onclick="saveSiteSettings()" style="width:100%; justify-content:center; margin-top:20px;">Save All Settings</button>
+                </div>
+            </div>
+        </div>
+        <footer class="footer" style="border-top:1px solid var(--border-subtle);">
+            <div class="container">
+                <div class="footer-brand">NEXIFY <span>NOVA</span></div>
+                <div class="social-links"><a href="#"><i class="fab fa-facebook-f"></i></a><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-youtube"></i></a></div>
+                <p>&copy; 2026 Nexify Nova. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ===== CONTACT PAGE MODAL ===== -->
+    <div id="contactPage" class="page-modal">
+        <button class="modal-close-btn" onclick="closePageModal('contactPage')">&times;</button>
+        <nav class="navbar" style="position:relative;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);">
+            <div class="container">
+                <a href="#" class="logo-wrapper" onclick="closePageModal('contactPage'); scrollToTop();">
+                    <img src="https://i.ibb.co/6GdkxBh/Chat-GPT-Image-Sep-1-2026-10-26-24-AM.png" alt="Nexify Nova Logo" class="logo-img" />
+                    <div>
+                        <div class="brand-name">NEXIFY <span>NOVA</span></div>
+                        <div class="brand-tagline">Digital Business Solutions</div>
+                    </div>
+                </a>
+                <ul class="nav-links" style="display:flex; margin-left:auto;">
+                    <li id="nav-home"><a href="#" onclick="closePageModal('contactPage'); scrollToTop();"><i class="fas fa-home"></i> Home</a></li>
+                    <li id="nav-contact"><a href="#" onclick="closePageModal('contactPage'); openPageModal('contactPage');"><i class="fas fa-envelope"></i> Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="modal-page-hero">
+            <img src="https://images.pexels.com/photos/3182823/pexels-photo-3182823.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Contact Us" />
+            <div class="page-title-overlay"><h1>Get in <span>Touch</span></h1><p>We'd love to hear from you</p></div>
+        </div>
+        <div class="modal-page-content" style="max-width: 1000px;">
+            <div class="contact-wrapper">
+                <div class="contact-form">
+                    <h3>Send us a Message</h3>
+                    <div class="success-msg" id="successMsgModal"><i class="fas fa-check-circle"></i> Thank you! Your message has been sent successfully.</div>
+                    <form id="contactFormModal">
+                        <div class="form-group"><label for="contactNameModal">Full Name *</label><input type="text" id="contactNameModal" required placeholder="Muhammad Ali" /></div>
+                        <div class="form-group"><label for="contactEmailModal">Email Address *</label><input type="email" id="contactEmailModal" required placeholder="ali@example.com" /></div>
+                        <div class="form-group"><label for="contactPhoneModal">Phone Number</label><input type="tel" id="contactPhoneModal" placeholder="+44 7123 456789" /></div>
+                        <div class="form-group"><label for="contactMessageModal">Message *</label><textarea id="contactMessageModal" rows="5" required placeholder="Tell us about your project..."></textarea></div>
+                        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Send Message</button>
+                    </form>
+                </div>
+                <div class="contact-info-box">
+                    <h3>Contact Information</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> <span id="modal-contact-address">Berkeley square House, London W1J 6JD</span></p>
+                    <p><i class="fas fa-phone"></i> <span id="modal-contact-phone1">+44 7564 920084</span> (UK & Intl)</p>
+                    <p><i class="fas fa-phone"></i> <span id="modal-contact-phone2">+92 349 3709850</span> (Pakistan)</p>
+                    <p><i class="fas fa-envelope"></i> <a href="mailto:info@nexifynova.co.uk" id="modal-contact-email1">info@nexifynova.co.uk</a></p>
+                    <p><i class="fas fa-envelope"></i> <a href="mailto:nexifynova.solutions@gmail.com" id="modal-contact-email2">nexifynova.solutions@gmail.com</a></p>
+                    <p><i class="fas fa-globe"></i> <a href="#" id="modal-contact-website">www.nexifynova.co.uk</a></p>
+                    <div class="offer-list">
+                        <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:8px;">What we offer:</h3>
+                        <p>✓ Custom E-Commerce Stores</p>
+                        <p>✓ B2B Inventory & ERP Systems</p>
+                        <p>✓ Corporate Websites & Booking Systems</p>
+                        <p>✓ Real-Time Data Management</p>
+                        <p>✓ 24/7 Technical Support</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="footer" style="border-top:1px solid var(--border-subtle);">
+            <div class="container">
+                <div class="footer-brand">NEXIFY <span>NOVA</span></div>
+                <div class="social-links"><a href="#"><i class="fab fa-facebook-f"></i></a><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-youtube"></i></a></div>
+                <p>&copy; 2026 Nexify Nova. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ===== REGISTER PAGE MODAL ===== -->
+    <div id="registerPage" class="page-modal">
+        <button class="modal-close-btn" onclick="closePageModal('registerPage')">&times;</button>
+        <nav class="navbar" style="position:relative;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);">
+            <div class="container">
+                <a href="#" class="logo-wrapper" onclick="closePageModal('registerPage'); scrollToTop();">
+                    <img src="https://i.ibb.co/6GdkxBh/Chat-GPT-Image-Sep-1-2026-10-26-24-AM.png" alt="Nexify Nova Logo" class="logo-img" />
+                    <div>
+                        <div class="brand-name">NEXIFY <span>NOVA</span></div>
+                        <div class="brand-tagline">Digital Business Solutions</div>
+                    </div>
+                </a>
+                <ul class="nav-links" style="display:flex; margin-left:auto;">
+                    <li id="nav-home"><a href="#" onclick="closePageModal('registerPage'); scrollToTop();"><i class="fas fa-home"></i> Home</a></li>
+                    <li id="nav-register"><a href="#" onclick="closePageModal('registerPage'); openPageModal('registerPage');"><i class="fas fa-user-plus"></i> Register</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="modal-page-hero">
+            <img src="https://images.pexels.com/photos/3182816/pexels-photo-3182816.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Register" />
+            <div class="page-title-overlay"><h1>Create <span>Account</span></h1><p>Join our community of digital businesses</p></div>
+        </div>
+        <div class="modal-page-content" style="max-width: 600px;">
+            <div class="content-text">
+                <form id="registerForm">
+                    <div class="form-group"><label for="regName">Full Name *</label><input type="text" id="regName" required placeholder="Muhammad Ali" /></div>
+                    <div class="form-group"><label for="regEmail">Email Address *</label><input type="email" id="regEmail" required placeholder="ali@example.com" /></div>
+                    <div class="form-group"><label for="regPassword">Password *</label><input type="password" id="regPassword" required placeholder="Min 6 characters" minlength="6" /></div>
+                    <div class="form-group"><label for="regConfirm">Confirm Password *</label><input type="password" id="regConfirm" required placeholder="Confirm password" /></div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Register</button>
+                </form>
+                <div id="registerSuccess" style="display:none;margin-top:16px;padding:16px;background:rgba(46,125,50,0.15);border-radius:var(--radius-sm);border-left:3px solid #4caf50;color:#81c784;">
+                    <i class="fas fa-check-circle"></i> Registration successful! You can now <a href="#" onclick="closePageModal('registerPage'); openPageModal('loginPage'); return false;" style="color:var(--accent-gold);font-weight:600;">Sign In</a>.
+                </div>
+            </div>
+        </div>
+        <footer class="footer" style="border-top:1px solid var(--border-subtle);">
+            <div class="container">
+                <div class="footer-brand">NEXIFY <span>NOVA</span></div>
+                <div class="social-links"><a href="#"><i class="fab fa-facebook-f"></i></a><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-youtube"></i></a></div>
+                <p>&copy; 2026 Nexify Nova. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ===== LOGIN PAGE MODAL ===== -->
+    <div id="loginPage" class="page-modal">
+        <button class="modal-close-btn" onclick="closePageModal('loginPage')">&times;</button>
+        <nav class="navbar" style="position:relative;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);">
+            <div class="container">
+                <a href="#" class="logo-wrapper" onclick="closePageModal('loginPage'); scrollToTop();">
+                    <img src="https://i.ibb.co/6GdkxBh/Chat-GPT-Image-Sep-1-2026-10-26-24-AM.png" alt="Nexify Nova Logo" class="logo-img" />
+                    <div>
+                        <div class="brand-name">NEXIFY <span>NOVA</span></div>
+                        <div class="brand-tagline">Digital Business Solutions</div>
+                    </div>
+                </a>
+                <ul class="nav-links" style="display:flex; margin-left:auto;">
+                    <li id="nav-home"><a href="#" onclick="closePageModal('loginPage'); scrollToTop();"><i class="fas fa-home"></i> Home</a></li>
+                    <li id="nav-login"><a href="#" onclick="closePageModal('loginPage'); openPageModal('loginPage');"><i class="fas fa-sign-in-alt"></i> Sign In</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="modal-page-hero">
+            <img src="https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Sign In" />
+            <div class="page-title-overlay"><h1>Welcome <span>Back</span></h1><p>Sign in to your account</p></div>
+        </div>
+        <div class="modal-page-content" style="max-width: 500px;">
+            <div class="content-text">
+                <form id="loginForm">
+                    <div class="form-group"><label for="loginEmail">Email Address *</label><input type="email" id="loginEmail" required placeholder="ali@example.com" /></div>
+                    <div class="form-group"><label for="loginPassword">Password *</label><input type="password" id="loginPassword" required placeholder="Enter your password" /></div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Sign In</button>
+                </form>
+                <div id="loginError" style="display:none;margin-top:16px;padding:12px;background:rgba(220,53,69,0.15);border-radius:var(--radius-sm);color:#dc3545;">Invalid email or password.</div>
+                <p style="margin-top:20px;text-align:center;color:var(--text-secondary);">Don't have an account? <a href="#" onclick="closePageModal('loginPage'); openPageModal('registerPage'); return false;" style="color:var(--accent-gold);font-weight:600;">Register here</a>.</p>
+            </div>
+        </div>
+        <footer class="footer" style="border-top:1px solid var(--border-subtle);">
+            <div class="container">
+                <div class="footer-brand">NEXIFY <span>NOVA</span></div>
+                <div class="social-links"><a href="#"><i class="fab fa-facebook-f"></i></a><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-youtube"></i></a></div>
+                <p>&copy; 2026 Nexify Nova. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ===== PROFILE PAGE MODAL ===== -->
+    <div id="profilePage" class="page-modal">
+        <button class="modal-close-btn" onclick="closePageModal('profilePage')">&times;</button>
+        <nav class="navbar" style="position:relative;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);">
+            <div class="container">
+                <a href="#" class="logo-wrapper" onclick="closePageModal('profilePage'); scrollToTop();">
+                    <img src="https://i.ibb.co/6GdkxBh/Chat-GPT-Image-Sep-1-2026-10-26-24-AM.png" alt="Nexify Nova Logo" class="logo-img" />
+                    <div>
+                        <div class="brand-name">NEXIFY <span>NOVA</span></div>
+                        <div class="brand-tagline">Digital Business Solutions</div>
+                    </div>
+                </a>
+                <ul class="nav-links" style="display:flex; margin-left:auto;">
+                    <li id="nav-home"><a href="#" onclick="closePageModal('profilePage'); scrollToTop();"><i class="fas fa-home"></i> Home</a></li>
+                    <li id="nav-profile"><a href="#" onclick="closePageModal('profilePage'); openPageModal('profilePage');"><i class="fas fa-id-card"></i> Profile</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="modal-page-hero">
+            <img src="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Profile" />
+            <div class="page-title-overlay"><h1>My <span>Profile</span></h1><p>Manage your personal information</p></div>
+        </div>
+        <div class="modal-page-content" style="max-width: 700px;">
+            <div class="content-text">
+                <div class="profile-pic"><i class="fas fa-user-circle"></i></div>
+                <form id="profileForm">
+                    <div class="form-group"><label for="profileName">Full Name *</label><input type="text" id="profileName" required placeholder="Muhammad Ali" /></div>
+                    <div class="form-group"><label for="profileEmail">Email Address *</label><input type="email" id="profileEmail" required placeholder="ali@example.com" /></div>
+                    <div class="form-group"><label for="profilePhone">Phone Number</label><input type="tel" id="profilePhone" placeholder="+44 7123 456789" /></div>
+                    <div class="form-group"><label for="profileCity">City</label><input type="text" id="profileCity" placeholder="e.g. London" /></div>
+                    <div class="form-group"><label for="profileBusiness">Business Name</label><input type="text" id="profileBusiness" placeholder="Your company name" /></div>
+                    <div class="form-group"><label for="profileBizType">Business Type</label><input type="text" id="profileBizType" placeholder="e.g. Retail, ERP, E-Commerce" /></div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Update Profile</button>
+                </form>
+                <div id="profileSuccess" style="display:none;margin-top:16px;padding:16px;background:rgba(46,125,50,0.15);border-radius:var(--radius-sm);color:#81c784;"><i class="fas fa-check-circle"></i> Profile updated successfully!</div>
+            </div>
+        </div>
+        <footer class="footer" style="border-top:1px solid var(--border-subtle);">
+            <div class="container">
+                <div class="footer-brand">NEXIFY <span>NOVA</span></div>
+                <div class="social-links"><a href="#"><i class="fab fa-facebook-f"></i></a><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-youtube"></i></a></div>
+                <p>&copy; 2026 Nexify Nova. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ===== BACK TO TOP & WHATSAPP ===== -->
+    <button class="back-to-top" id="backToTop" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+    <a href="https://wa.me/923493709850" target="_blank" class="whatsapp-float" aria-label="Chat on WhatsApp"><i class="fab fa-whatsapp"></i></a>
+
+    <!-- ============================================================
+    JAVASCRIPT FILES LINKS
+    ============================================================ -->
+    <script src="js/supabase-config.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
